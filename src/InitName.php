@@ -41,13 +41,13 @@ class InitName
         } else {
             $charName = '';
             $names = is_array($names) ? $names[0] : $names;
-            if (mb_strlen($charName) > 2) {
+            if (mb_strlen($charName) >= 2) {
                 $names = mb_substr($names, -2);
                 for ($i = 0; $i < 2; $i++) {
-                    $charName .= $this->getFirstChar(strtoupper(mb_substr($names, $i, $i + 1, "UTF-8")));
+                    $charName .= $this->getFirstChar(strtoupper(mb_substr($names, $i, 1, "UTF-8")));
                 }
             } else {
-                $charName = $this->getFirstChar(strtoupper(mb_substr($names, -1, 1, "UTF-8")));
+                $charName = $this->getFirstChar(strtoupper(mb_substr($names, 0, 1, "UTF-8")));
             }
 
         }

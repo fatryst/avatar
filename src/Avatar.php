@@ -27,7 +27,7 @@ class Avatar
     }
 
     /**
-     * @param $names
+     * @param $names 用户名，多个用户名传递数组
      *
      * @return array|resource
      */

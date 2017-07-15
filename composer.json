@@ -1,0 +1,25 @@
+{
+    "name": "aliwuyun/avatar",
+    "keywords": [
+        "avatar",
+        "material design",
+        "templating"
+    ],
+    "description": "Alidayu avatars handler.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "fa.zeng",
+            "email": "zengfa@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aliwuyun\\Avatar\\": "src"
+        }
+    },
+    "minimum-stability": "dev"
+}

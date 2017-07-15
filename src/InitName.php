@@ -13,38 +13,52 @@ class InitName
     public $asianFont;
     public $enableAsianChar;
 
+    /**
+     * InitName constructor.
+     */
     function __construct()
     {
         $this->asianFont = dirname(__FILE__) . '/fonts/SourceHanSansCN-Normal.ttf';
         $this->enableAsianChar = is_file($this->asianFont);
     }
 
+    /**
+     * @param $names
+     *
+     * @return array|null|string
+     */
     public function getName($names)
     {
         $charName = null;
         if (is_array($names) && count($names) > 1) {
             foreach ($names as $name) {
-                if (mb_strlen($name) > 2) ;
-                {
+                if (mb_strlen($name) > 2) {
                     $name = mb_substr($name, -2);
                 }
                 $theName = $this->getFirstChar(strtoupper(mb_substr($name, 0, 1, "UTF-8")));
                 $charName[] = $theName;
             }
         } else {
-            $names = is_array($names) ? $names[0] : $names;
-            if (mb_strlen($charName) > 2) ;
-            {
-                $names = mb_substr($names, -2);
-            }
             $charName = '';
-            for ($i = 0; $i < 2; $i++) {
-                $charName .= $this->getFirstChar(strtoupper(mb_substr($names, $i, $i + 1, "UTF-8")));
+            $names = is_array($names) ? $names[0] : $names;
+            if (mb_strlen($charName) > 2) {
+                $names = mb_substr($names, -2);
+                for ($i = 0; $i < 2; $i++) {
+                    $charName .= $this->getFirstChar(strtoupper(mb_substr($names, $i, $i + 1, "UTF-8")));
+                }
+            } else {
+                $charName = $this->getFirstChar(strtoupper(mb_substr($names, -1, 1, "UTF-8")));
             }
+
         }
         return $charName;
     }
 
+    /**
+     * @param $char
+     *
+     * @return string
+     */
     private function getFirstChar($char)
     {
         $CNChar = ord($char);

@@ -50,6 +50,9 @@ class InitMap
     }
 
 
+    /**
+     * @return resource
+     */
     public function Initialize()
     {
         $width = $this->avatarSize;

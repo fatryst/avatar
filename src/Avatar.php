@@ -16,11 +16,21 @@ class Avatar
 
     private $avatarSize;
 
+    /**
+     * Avatar constructor.
+     *
+     * @param int $avatarSize
+     */
     function __construct($avatarSize = 256)
     {
         $this->avatarSize = $avatarSize;
     }
 
+    /**
+     * @param $names
+     *
+     * @return array|resource
+     */
     public function create($names)
     {
         $this->names = (new InitName())->getName($names);
@@ -37,12 +47,20 @@ class Avatar
         return $this->avatar;
     }
 
+    /**
+     * @param $path
+     *
+     * @return bool
+     */
     public function save($path)
     {
         return imagepng($this->avatar, $path);
 
     }
 
+    /**
+     *
+     */
     private function puzzle()
     {
         $background = imagecreatetruecolor($this->avatarSize, $this->avatarSize);
@@ -96,6 +114,11 @@ class Avatar
         $this->avatar = $background;
     }
 
+    /**
+     * @param $targetSize
+     *
+     * @return bool|resource
+     */
     public function resize($targetSize)
     {
         if (isset($this->avatar)) {

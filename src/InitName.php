@@ -33,7 +33,7 @@ class InitName
         if (is_array($names) && count($names) > 1) {
             foreach ($names as $name) {
                 if (mb_strlen($name) > 2) {
-                    $name = mb_substr($name, -2);
+                    $name = mb_substr($name, -1);
                 }
                 $theName = $this->getFirstChar(strtoupper(mb_substr($name, 0, 1, "UTF-8")));
                 $charName[] = $theName;

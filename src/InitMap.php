@@ -78,8 +78,8 @@ class InitMap
         $fontBox = imagettfbbox($fontSize, 0, $this->fontFile, $this->name);
         $fontWidth = $fontBox[0] + $fontBox[2];
         $fontHeight = $fontBox[1] - $fontBox[7];
-        $X = ($width) / 2 - $fontWidth / 2;
-        $Y = ($height - $padding) / 2 + $fontHeight / 2;
+        $X = $width / 2 - $fontWidth / 2;
+        $Y = $height / 2 + $fontHeight / 2;
 
         imagettftext($this->avatar, $fontSize, 0, $X, $Y, $FontColor, $this->fontFile, $this->name);
         return $this->avatar;

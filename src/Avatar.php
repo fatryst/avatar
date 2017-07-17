@@ -55,12 +55,9 @@ class Avatar
     public function save($path)
     {
         return imagepng($this->avatar, $path);
-
     }
 
-    /**
-     *
-     */
+
     private function puzzle()
     {
         $background = imagecreatetruecolor($this->avatarSize, $this->avatarSize);
@@ -108,7 +105,7 @@ class Avatar
                 $x = 0;
                 $y = $y + $height + $padding;
             }
-            imagecopyresized($background, $avatar, $x, $y, 0, 0, $width, $height, imagesx($avatar), imagesy($avatar)); // 最后两个参数为原始图片宽度和高度，倒数两个参数为copy时的图片宽度和高度
+            imagecopyresized($background, $avatar, $x, $y, 0, 0, $width, $height, imagesx($avatar), imagesy($avatar));
             $x = $x + $width + $padding;
         }
         $this->avatar = $background;
@@ -141,4 +138,89 @@ class Avatar
         }
     }
 
+    /**
+     * @param array $img_list
+     * @param int $size
+     * @return mixed
+     */
+    public function createGroupAvatar($img_list = [], $size = 0)
+    {
+        if (empty($img_list)) {
+            return false;
+        }
+        if (count($img_list) < 2) {
+            return $img_list[0];
+        }
+        if ($size) {
+            $this->avatarSize = $size;
+        }
+        $background = imagecreatetruecolor($this->avatarSize, $this->avatarSize);
+        imageSaveAlpha($background, true);
+        $BackgroundAlpha = imagecolorallocatealpha($background, 255, 255, 255, 127);
+        imagefill($background, 0, 0, $BackgroundAlpha);
+        if (function_exists('imageantialias')) {
+            imageantialias($background, true);
+        }
+
+        $count = count($img_list);
+        if ($count > 4) {
+            array_slice($img_list, 0, 4);
+        }
+        $wrapFlag = array();
+        $x = 0;
+        $y = 0;
+        $width = 0;
+        $height = 0;
+        $padding = 4;
+        switch ($count) {
+            case 2:
+                $x = 0;
+                $y = intval($this->avatarSize / 4);
+                $width = intval($this->avatarSize / 2);
+                $height = intval($this->avatarSize / 2);
+                break;
+            case 3:
+                $x = $this->avatarSize / 4;
+                $y = 0;
+                $width = intval($this->avatarSize / 2);
+                $height = intval($this->avatarSize / 2);
+                $wrapFlag = array(2);
+                break;
+            case 4:
+                $x = 0;
+                $y = 0;
+                $width = intval($this->avatarSize / 2);
+                $height = intval($this->avatarSize / 2);
+                $wrapFlag = array(3);
+                break;
+        }
+
+        foreach ($img_list as $k => $pic_path) {
+            $kk = $k + 1;
+            if (in_array($kk, $wrapFlag)) {
+                $x = 0;
+                $y = $y + $height + $padding;
+            }
+            $pathInfo = pathinfo($pic_path);
+            switch (strtolower($pathInfo['extension'])) {
+                case 'jpg':
+                case 'jpeg':
+                    $imagecreatefromjpeg = 'imagecreatefromjpeg';
+                    break;
+                case 'png':
+                    $imagecreatefromjpeg = 'imagecreatefrompng';
+                    break;
+                case 'gif':
+                default:
+                    $imagecreatefromjpeg = 'imagecreatefromstring';
+                    $pic_path = file_get_contents($pic_path);
+                    break;
+            }
+            $resource = $imagecreatefromjpeg($pic_path);
+
+            imagecopyresized($background, $resource, $x, $y, 0, 0, $width, $height, imagesx($resource), imagesy($resource)); // 最后两个参数为原始图片宽度和高度，倒数两个参数为copy时的图片宽度和高度
+            $x = $x + $width + $padding;
+        }
+        $this->avatar = $background;
+    }
 }

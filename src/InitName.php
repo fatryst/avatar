@@ -33,7 +33,11 @@ class InitName
         if (is_array($names) && count($names) > 1) {
             foreach ($names as $name) {
                 if (mb_strlen($name) > 2) {
-                    $name = mb_substr($name, -1);
+                    if ($this->hasChinese($name)) {
+                        $name = mb_substr($name, -1);
+                    } else {
+                        $name = mb_substr($name, 0, 2);
+                    }
                 }
                 $theName = $this->getFirstChar(strtoupper(mb_substr($name, 0, 1, "UTF-8")));
                 $charName[] = $theName;
@@ -42,14 +46,17 @@ class InitName
             $charName = '';
             $names = is_array($names) ? $names[0] : $names;
             if (mb_strlen($names) >= 2) {
-                $names = mb_substr($names, -2);
-                for ($i = 0; $i < 2; $i++) {
-                    $charName .= $this->getFirstChar(strtoupper(mb_substr($names, $i, 1, "UTF-8")));
+                if ($this->hasChinese($names)) {
+                    $names = mb_substr($names, -2);
+                    for ($i = 0; $i < 2; $i++) {
+                        $charName .= $this->getFirstChar(strtoupper(mb_substr($names, $i, 1, "UTF-8")));
+                    }
+                } else {
+                    $charName = $this->getFirstChar(strtoupper(mb_substr($names, 0, 2, "UTF-8")));
                 }
             } else {
                 $charName = $this->getFirstChar(strtoupper(mb_substr($names, 0, 1, "UTF-8")));
             }
-
         }
         return $charName;
     }
@@ -90,5 +97,14 @@ class InitName
             if ($Code >= -11055 and $Code <= -10247) return "Z";
         }
         return $char;
+    }
+
+    private function hasChinese($char)
+    {
+        if (preg_match('/^[\x{4e00}-\x{9fa5}]+$/u', $char) > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
